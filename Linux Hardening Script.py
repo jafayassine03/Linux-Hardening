@@ -1,8 +1,9 @@
 import os
 import random
 import string
+import socket
 
-print("=== Simple Linux Hardening Tool ===")
+print("=== Advanced Linux Hardening Tool ===")
 
 if os.geteuid() != 0:
     print("Please run this script as root.")
@@ -19,7 +20,11 @@ while True:
     print("7. Install Fail2Ban")
     print("8. Secure shared memory")
     print("9. Generate random password")
-    print("10. Exit")
+    print("10. Show open ports")
+    print("11. Install ClamAV")
+    print("12. Disable unused services")
+    print("13. System information")
+    print("14. Exit")
 
     choice = input("Enter choice: ")
 
@@ -119,6 +124,42 @@ while True:
         print(f"Generated Password: {password}")
 
     elif choice == "10":
+        print("Showing open ports...")
+        os.system("ss -tulnp")
+
+    elif choice == "11":
+        print("Installing ClamAV antivirus...")
+
+        os.system("apt install clamav clamav-daemon -y")
+        os.system("freshclam")
+        os.system("systemctl enable clamav-daemon")
+        os.system("systemctl start clamav-daemon")
+
+        print("ClamAV installed.")
+
+    elif choice == "12":
+        print("Disabling unused services...")
+
+        services = ["telnet", "rpcbind", "avahi-daemon"]
+
+        for service in services:
+            os.system(f"systemctl disable {service} 2>/dev/null")
+            os.system(f"systemctl stop {service} 2>/dev/null")
+
+        print("Unused services disabled.")
+
+    elif choice == "13":
+        print("\n=== System Information ===")
+
+        hostname = socket.gethostname()
+
+        print(f"Hostname: {hostname}")
+
+        os.system("uname -a")
+        os.system("uptime")
+        os.system("df -h")
+
+    elif choice == "14":
         print("Exiting...")
         break
 
