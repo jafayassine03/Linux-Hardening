@@ -2,6 +2,7 @@ import os
 import random
 import string
 import socket
+import subprocess
 
 print("=== Advanced Linux Hardening Tool ===")
 
@@ -24,7 +25,12 @@ while True:
     print("11. Install ClamAV")
     print("12. Disable unused services")
     print("13. System information")
-    print("14. Exit")
+    print("14. Check failed login attempts")
+    print("15. Backup important configs")
+    print("16. Scan for world writable files")
+    print("17. Lock a user account")
+    print("18. Unlock a user account")
+    print("19. Exit")
 
     choice = input("Enter choice: ")
 
@@ -158,8 +164,48 @@ while True:
         os.system("uname -a")
         os.system("uptime")
         os.system("df -h")
+        os.system("free -h")
 
     elif choice == "14":
+        print("Checking failed login attempts...")
+        os.system("lastb | head")
+
+    elif choice == "15":
+        backup_dir = "/root/security_backups"
+
+        os.system(f"mkdir -p {backup_dir}")
+
+        files = [
+            "/etc/ssh/sshd_config",
+            "/etc/passwd",
+            "/etc/shadow",
+            "/etc/group"
+        ]
+
+        for file in files:
+            os.system(f"cp {file} {backup_dir}")
+
+        print(f"Configs backed up to {backup_dir}")
+
+    elif choice == "16":
+        print("Scanning for world writable files...")
+        os.system("find / -type f -perm -0002 2>/dev/null | head -50")
+
+    elif choice == "17":
+        username = input("Enter username to lock: ")
+
+        os.system(f"passwd -l {username}")
+
+        print(f"User {username} locked.")
+
+    elif choice == "18":
+        username = input("Enter username to unlock: ")
+
+        os.system(f"passwd -u {username}")
+
+        print(f"User {username} unlocked.")
+
+    elif choice == "19":
         print("Exiting...")
         break
 
