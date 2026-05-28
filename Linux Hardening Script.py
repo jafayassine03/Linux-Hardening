@@ -3,6 +3,7 @@ import random
 import string
 import socket
 import subprocess
+import time
 
 print("=== Advanced Linux Hardening Tool ===")
 
@@ -30,7 +31,12 @@ while True:
     print("16. Scan for world writable files")
     print("17. Lock a user account")
     print("18. Unlock a user account")
-    print("19. Exit")
+    print("19. Check listening services")
+    print("20. Check disk usage")
+    print("21. Monitor CPU and RAM")
+    print("22. Reboot system")
+    print("23. Shutdown system")
+    print("24. Exit")
 
     choice = input("Enter choice: ")
 
@@ -206,8 +212,34 @@ while True:
         print(f"User {username} unlocked.")
 
     elif choice == "19":
+        print("Checking listening services...")
+        os.system("systemctl list-units --type=service --state=running")
+
+    elif choice == "20":
+        print("Checking disk usage...")
+        os.system("du -sh /* 2>/dev/null | sort -h")
+
+    elif choice == "21":
+        print("Monitoring CPU and RAM...")
+        os.system("top")
+
+    elif choice == "22":
+        confirm = input("Are you sure you want to reboot? (yes/no): ")
+
+        if confirm.lower() == "yes":
+            os.system("reboot")
+
+    elif choice == "23":
+        confirm = input("Are you sure you want to shutdown? (yes/no): ")
+
+        if confirm.lower() == "yes":
+            os.system("shutdown now")
+
+    elif choice == "24":
         print("Exiting...")
         break
 
     else:
         print("Invalid choice.")
+
+    time.sleep(2)
